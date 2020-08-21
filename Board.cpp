@@ -139,15 +139,53 @@ void Board::pushDownRight() {
 }
 
 void Board::pushDownLeft() {
+    int i = 6;
+    int j = 0;
+
+    for ( ; i > 0; i--, j++) {
+        if (grid[i][j] == EMPTY) {
+            break; 
+        }
+    }
     
+    for ( ; i < 6; i++, j--) {
+        setCell(i, j, grid[i+1][j-1]);
+    }
+
+    setCell(6, 0, next_cell);
 }
 
 void Board::pushUpRight() {
+    int i = 0;
+    int j = 6;
+
+    for ( ; i < 6; i++, j--) {
+        if (grid[i][j] == EMPTY) {
+            break; 
+        }
+    }
     
+    for ( ; i > 0; i--, j++) {
+        setCell(i, j, grid[i-1][j+1]);
+    }
+
+    setCell(0, 6, next_cell);
 }
 
 void Board::pushUpLeft() {
+    int i = 6;
+
+    for ( ; i > 0; i--) {
+        if (grid[i][i] == EMPTY) {
+            break; 
+        }
+    }
     
+    for ( ; i < 6; i++) {
+        setCell(i, i, grid[i+1][i+1]);
+    }
+
+    setCell(6, 6, next_cell);
 }
 
 void Board::push(Button b) {
