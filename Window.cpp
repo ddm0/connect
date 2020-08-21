@@ -33,6 +33,10 @@ void Window::close() {
     SDL_Quit();
 }
 
+void Window::clear() {
+    SDL_RenderClear(renderer);
+}
+
 void Window::display() {
     SDL_RenderPresent(renderer);
 }

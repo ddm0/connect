@@ -10,6 +10,7 @@ class Window {
     public:
         Window(int width, int height);
         void close();
+        void clear();
         void display();
         SDL_Renderer* getRenderer();
         void addTexture(SDL_Texture *texture, SDL_Rect &rect);

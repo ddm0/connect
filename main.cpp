@@ -3,8 +3,10 @@
 #include "Graphics.h"
 #include "Board.h"
 
-enum texture{BOARD = 0, RED = 1, BLUE = 2};
+void gridToPosition(int *x, int *y);
+void updateWindow(std::array<std::array<cell_state, 7>, 7> grid);
 
+enum texture{BOARD = 0, RED = 1, BLUE = 2};
 const int WINDOW_WIDTH = 1280;
 const int WINDOW_HEIGHT = 720;
 const int BOARD_X = WINDOW_WIDTH/2-WINDOW_HEIGHT/2;
@@ -13,34 +15,8 @@ const int BOARD_Y = 0;
 Window window(WINDOW_WIDTH,WINDOW_HEIGHT); 
 Graphics graphics;
 Board board(BOARD_X,BOARD_Y);
-
 SDL_Rect board_rect{BOARD_X,BOARD_Y,WINDOW_HEIGHT,WINDOW_HEIGHT};
 SDL_Rect cell_rect{board.CELL_SIZE};
-
-void g() {
-
-}
-
-void gridToPosition(int *x, int *y) {
-    *x = WINDOW_WIDTH + board.CELL_SIZE * (*x + 1);
-    *y = WINDOW_HEIGHT + board.CELL_SIZE * (*y + 1);
-}
-
-void updateWindow(std::vector<CellData> changelist) {
-    int x, y;
-    window.addTexture(graphics.getTexture(BOARD), board_rect);
-
-    for (std::vector<CellData>::iterator it = changelist.begin(); it != changelist.end(); ++it) {
-        x = it->x;
-        y = it->y;
-        gridToPosition(&x, &y);
-
-        SDL_Rect r{x, y, board.CELL_SIZE, board.CELL_SIZE};
-        window.addTexture(graphics.getTexture(it->s), r);
-    }
-
-    window.display();
-}
 
 int main(int argc, const char* argv[]) {
     int mousex;
@@ -49,12 +25,11 @@ int main(int argc, const char* argv[]) {
     SDL_Event e;
     
     const std::string BOARD_PATH = "board.png";
-    const std::string RED_PATH = "sprite.png";
-    const std::string BLUE_PATH = "sprite.png";
+    const std::string RED_PATH = "red.png";
+    const std::string BLUE_PATH = "blue.png";
     graphics.createTexture(BOARD_PATH, window.getRenderer());
     graphics.createTexture(RED_PATH, window.getRenderer());
     graphics.createTexture(BLUE_PATH, window.getRenderer());
-
 
     window.addTexture(graphics.getTexture(BOARD), board_rect);
     window.display();
@@ -68,7 +43,7 @@ int main(int argc, const char* argv[]) {
                     break;
                 case SDL_MOUSEBUTTONDOWN:
                     if (board.handleEvent(&e)) {
-                        updateWindow(board.changelist);
+                        updateWindow(board.getGrid());
                     }
                     break;
             }
@@ -78,4 +53,29 @@ int main(int argc, const char* argv[]) {
     graphics.close();
     window.close();
     return 0;
+}
+
+void gridToPosition(int *x, int *y) {
+    *x = BOARD_X + board.CELL_SIZE * (*x + 1);
+    *y = BOARD_Y + board.CELL_SIZE * (*y + 1);
+}
+
+void updateWindow(std::array<std::array<cell_state, 7>, 7> grid) {
+    int x, y;
+    window.clear();
+    window.addTexture(graphics.getTexture(BOARD), board_rect);
+    
+    for (int i = 0; i < board.BOARD_SIZE; i++) {
+        for (int j = 0; j < board.BOARD_SIZE; j++) {
+            if(grid[i][j] != EMPTY) {
+                x = i;
+                y = j;
+                gridToPosition(&x, &y);
+                SDL_Rect r{x, y, board.CELL_SIZE, board.CELL_SIZE};
+                window.addTexture(graphics.getTexture(grid[i][j]), r);
+            }
+        }
+    }
+    
+    window.display();
 }
