@@ -10,7 +10,6 @@ class Graphics {
     public:
         int createTexture(std::string path, SDL_Renderer* renderer);
         SDL_Texture* getTexture(int i);
-        //SDL_Texture* getTexture();
         SDL_Texture* getLastTexture();
         void close();
     private:

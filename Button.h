@@ -10,10 +10,8 @@ class Button {
         SDL_Point getPosition();
         bool isPressed(int mx, int my);
 
-
     private:
         SDL_Point position;
-
 };
 
 #endif

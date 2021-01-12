@@ -25,6 +25,7 @@ class Board {
         SDL_Point position;
         std::array<std::array<cell_state, 7>, 7> grid;
         Button button[BUTTONS];
+        bool gameover;
         void getGridPosition(Button b, int *x, int *y);
         void setCell(int x, int y, cell_state s);
         void pushUp(int x);
